@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+    database:
+      image: mysql
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: "Clarusway_1"
+        MYSQL_DATABASE: "bookstore_db"
+        MYSQL_USER: "clarusway"
+        MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      secrets:
+        - db_password
+      networks:
+        - mynet
+
+    webserver:
+      build: .
+      restart: always
+      depends_on:
+        - database
+      networks:
+        - mynet
+      ports:
+        - "80:80"
+
+secrets:
+     db_password:
+      file: /home/ec2-user/db_password.txt
+  
+networks:
+    mynet:
